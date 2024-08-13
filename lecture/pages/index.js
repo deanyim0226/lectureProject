@@ -1,13 +1,58 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Dropdown } from 'react-bootstrap';
 
 export default function Home() {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [showSignOut, setShowSignOut] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is logged in
+    const storedUser = sessionStorage.getItem('user');
+    if (!storedUser) {
+      router.push('/login');
+    } else {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    // Clear session storage and redirect to login page
+    sessionStorage.removeItem('user');
+    router.push('/login');
+  };
+
+  const toggleSignOut = () => {
+    setShowSignOut(prevShowSignOut => !prevShowSignOut);
+  };
+
+  if (!user) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <div className={styles.avatarContainer}>
+        <Dropdown show={showSignOut} onToggle={toggleSignOut} align="end">
+          <Dropdown.Toggle as="img"
+            src={user.picture}
+            alt="Google Avatar"
+            className={`rounded-circle ${styles.avatar}`}
+            onClick={toggleSignOut}
+          />
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
 
       <main>
         <h1 className={styles.title}>
