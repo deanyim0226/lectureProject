@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="IDMService:war">
+    <output-path>$PROJECT_DIR$/services/IDMService/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>IDMService</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="IDMService-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="IDMService:war exploded" />
+    </root>
+  </artifact>
+</component>
