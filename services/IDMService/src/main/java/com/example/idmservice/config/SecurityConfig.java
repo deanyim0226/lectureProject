@@ -14,15 +14,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.httpBasic().and().csrf().disable().authorizeRequests()
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/WEB-INF/jsp/**")).permitAll()
-                .and()
-
-                .formLogin();
-
-
-
-
+        http.httpBasic().and().cors().and().csrf().disable();
 
         return http.build();
     }

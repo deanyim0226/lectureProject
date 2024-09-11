@@ -11,6 +11,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -95,13 +96,15 @@ public class AppConfig {
     }
 
     /*
-    to encode the password for the security purpose\
-        @Bean
+    to encode the password for the security purpose
+     */
+
+    @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder(){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder;
     }
-     */
+
 
 
     @Bean
