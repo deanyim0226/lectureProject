@@ -9,6 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+<<<<<<< HEAD
 
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:9091") // Allow requests from your client
@@ -16,5 +17,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true);
         //WebMvcConfigurer.super.addCorsMappings(registry);
+=======
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:9091")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+
+>>>>>>> 1a2f9fa (add login and register apis)
     }
 }
