@@ -28,6 +28,7 @@ public class UserController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@RequestBody User user){
+        System.out.println("received user info from client " + user.getEmail());
 
         User existingUser = userService.findByEmail(user.getEmail());
 
@@ -41,7 +42,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
-
+        System.out.println("trying to login with email " + request.getEmail());
         User user = userService.findByEmail(request.getEmail());
 
         if(user == null){
@@ -61,6 +62,8 @@ public class UserController {
         response.setAccessToken(accessToken);
         response.setRefreshToken(refreshTokenToString);
 
+        System.out.println("access token is generated  " + accessToken);
+        System.out.println("refresh token is generated " + refreshTokenToString);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

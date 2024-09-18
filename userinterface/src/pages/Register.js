@@ -22,7 +22,7 @@ const Register = (prop) =>{
         console.log(user);
 
         idm.register(user)
-            .then(navigate("/login"))
+            .then(()=>navigate("/login"))
             .catch(error => alert("error"));
         
         evt.preventDefault();

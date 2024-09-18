@@ -31,6 +31,7 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+
         <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
         <dependency>
             <groupId>com.nimbusds</groupId>
