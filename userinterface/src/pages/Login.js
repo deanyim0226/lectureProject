@@ -24,6 +24,7 @@ const Login = (prop) =>{
             .then((response) =>  {
                 console.log(response)
                 navigate("/home")
+                console.log("testing")
             })
             .catch((error) => alert(error))
 
