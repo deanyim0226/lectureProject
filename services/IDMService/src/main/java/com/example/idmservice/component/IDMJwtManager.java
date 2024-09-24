@@ -95,10 +95,12 @@ public class IDMJwtManager {
 
             if(Instant.now().isAfter(signedJWT.getJWTClaimsSet().getExpirationTime().toInstant())) {
                 //throw error
+                throw new RuntimeException();
             }
 
         } catch (ParseException | BadJOSEException | JOSEException  e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
