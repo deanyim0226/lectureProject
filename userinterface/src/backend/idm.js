@@ -3,6 +3,7 @@ import Config from "../backend/config.json"
 /*
 use axios to create REST calls to backend
 */
+
 async function login(loginRequest) {
     const requestBody = {
         email: loginRequest.email,
@@ -35,6 +36,20 @@ async function register(registerRequest) {
     return Axios.request(options);
 }
 
+async function authenticate(authenticateRequest){
+    const requestBody = {
+        accessToken: authenticateRequest.accessToken
+    };
+
+    const options = {
+        method: "POST",
+        baseURL: Config.baseUrl,
+        url: Config.idm.autheticate,
+        data: requestBody
+    }
+
+    return Axios.request(options);
+}
 
 
-export default {login, register};
+export default {login, register, authenticate};
