@@ -4,6 +4,7 @@ package com.example.idmservice.controller;
 import com.example.idmservice.component.IDMJwtManager;
 import com.example.idmservice.domain.RefreshToken;
 import com.example.idmservice.domain.User;
+import com.example.idmservice.model.request.AuthenticateRequest;
 import com.example.idmservice.model.request.LoginRequest;
 import com.example.idmservice.model.response.LoginResponse;
 import com.example.idmservice.service.UserService;
@@ -13,10 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class UserController {
+public class IDMController {
 
 
     @Autowired
@@ -65,5 +65,24 @@ public class UserController {
         System.out.println("access token is generated  " + accessToken);
         System.out.println("refresh token is generated " + refreshTokenToString);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> authenicate(@RequestBody AuthenticateRequest request)
+    {
+        String accessToken = request.getAccessToken();
+
+        if(accessToken.equals("") || accessToken.length() == 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        jwtManager.verifyAccessToken(accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        // You can return a ResponseEntity with a custom message and HTTP status code
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getMessage());
     }
 }
