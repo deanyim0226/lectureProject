@@ -2,35 +2,48 @@ import React from "react";
 import { useState } from "react";
 import idm from "../backend/idm";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setTokens } from "../state/User/UserAction";
 
 const Login = (prop) =>{
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
     const navigate = useNavigate();
+
+    let dispatchToStore = useDispatch();
     
     const login = (evt) =>{
         
-        console.log("login");
         const user ={
             email,
             password
         }
 
         console.log(user)
-        
+   
         idm.login(user)
-            .then((response) =>  {
-                console.log(response)
-                navigate("/home")
-                console.log("testing")
+            .then((auth) =>  {
+                console.log(auth.data)
+                
+                idm.authenticate(auth.data)
+                .then((response) => {
+        
+                    alert("authenication is done" + response)
+
+                    dispatchToStore(setTokens(auth.data))
+                    navigate("/home")
+                })
+                .catch((error)=>{
+                    alert("error" + error)
+                })
+
             })
             .catch((error) => alert(error))
 
-        evt.preventDefault();
-        
+            evt.preventDefault();
     }
+
     return(
         <>
 

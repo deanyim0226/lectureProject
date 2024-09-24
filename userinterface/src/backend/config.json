@@ -3,7 +3,8 @@
 
     "idm": {
       "login": "/login",
-      "register": "/register"
+      "register": "/register",
+      "autheticate": "/authenticate"
     }
   }
   
