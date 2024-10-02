@@ -6,7 +6,10 @@ import com.example.idmservice.domain.RefreshToken;
 import com.example.idmservice.domain.User;
 import com.example.idmservice.model.request.AuthenticateRequest;
 import com.example.idmservice.model.request.LoginRequest;
+import com.example.idmservice.model.request.RefreshRequest;
 import com.example.idmservice.model.response.LoginResponse;
+import com.example.idmservice.model.response.RefreshResponse;
+import com.example.idmservice.service.RefreshTokenService;
 import com.example.idmservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Controller
 public class IDMController {
 
@@ -22,6 +28,8 @@ public class IDMController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RefreshTokenService refreshTokenService;
 
     @Autowired
     IDMJwtManager jwtManager;
@@ -56,6 +64,8 @@ public class IDMController {
         String accessToken = jwtManager.buildAccessToken(user);
         RefreshToken refreshToken = jwtManager.buildRefreshToken(user);
 
+        refreshTokenService.saveRefreshToken(refreshToken);
+
         String refreshTokenToString = refreshToken.getToken();
 
         LoginResponse response = new LoginResponse();
@@ -65,6 +75,88 @@ public class IDMController {
         System.out.println("access token is generated  " + accessToken);
         System.out.println("refresh token is generated " + refreshTokenToString);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /*
+    refresh token flow 
+    check whether refresh token is expired or not.
+    check whether refresh token is revoked or not.
+    check if currentTime is after refresh token expire time or max expire time
+    if true, update the status of refresh token to be expired
+    
+    update refresh token expire time
+    
+    check if refresh token expire time is after refresh token max expire time  
+    if true, update old refresh token status to be revoked and return new refresh token and access token
+    
+    update same refresh token expire time in DB
+    return same refresh token and new access token 
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody RefreshRequest request)
+    {
+        String currentRefreshToken = request.getRefreshToken();
+
+        if(currentRefreshToken.length() != 36) {
+            throw new RuntimeException();
+        }
+
+        try {
+            UUID.fromString(currentRefreshToken);
+        }catch(IllegalArgumentException e) {
+            throw new RuntimeException();
+        }
+
+        RefreshToken verifiedeRefreshToken = refreshTokenService.verifyRefreshToken(currentRefreshToken);
+
+        if(jwtManager.hasExpired(verifiedeRefreshToken)) {
+            throw new RuntimeException();
+        }
+
+        if(jwtManager.needsRefresh(verifiedeRefreshToken)) {
+            throw new RuntimeException();
+        }
+
+        if(Instant.now().isAfter(verifiedeRefreshToken.getExpireTime()) || Instant.now().isAfter(verifiedeRefreshToken.getMaxLifeTime())) {
+            //update refreshToken status to expired in DB
+            refreshTokenService.expireRefreshToken(verifiedeRefreshToken);
+
+            throw new RuntimeException();
+        }
+
+        jwtManager.updateRefreshTokenExpireTime(verifiedeRefreshToken);
+
+        User user = refreshTokenService.getUserFromRefreshToken(verifiedeRefreshToken);
+
+        if(verifiedeRefreshToken.getExpireTime().isAfter(verifiedeRefreshToken.getMaxLifeTime()))
+        {
+            refreshTokenService.revokeRefreshToken(verifiedeRefreshToken);
+
+            String newAccessToken = jwtManager.buildAccessToken(user);
+            RefreshToken newRefreshToken = jwtManager.buildRefreshToken(user);
+
+            refreshTokenService.saveRefreshToken(newRefreshToken);
+
+            RefreshResponse body = new RefreshResponse()
+                    .setAccessToken(newAccessToken)
+                    .setRefreshToken(newRefreshToken.getToken());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(body);
+        }else{
+
+            refreshTokenService.updateRefreshTokenExpireTime(verifiedeRefreshToken);
+
+            String accessToken = jwtManager.buildAccessToken(user);
+
+            RefreshResponse body = new RefreshResponse()
+                    .setAccessToken(accessToken)
+                    .setRefreshToken(verifiedeRefreshToken.getToken());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(body);
+        }
+
     }
 
     @PostMapping("/authenticate")

@@ -2,8 +2,7 @@ package com.example.idmservice.domain;
 
 import com.example.idmservice.domain.type.TokenStatus;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 
@@ -12,9 +11,13 @@ public class RefreshToken {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer     id;
     private String      token;
+
     private Integer     userId;
+
+    @Enumerated(EnumType.STRING)
     private TokenStatus tokenStatus;
     private Instant expireTime;
     private Instant     maxLifeTime;

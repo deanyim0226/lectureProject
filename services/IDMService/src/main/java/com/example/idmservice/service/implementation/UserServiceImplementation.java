@@ -1,6 +1,7 @@
 package com.example.idmservice.service.implementation;
 
 import com.example.idmservice.domain.User;
+import com.example.idmservice.domain.type.UserStatus;
 import com.example.idmservice.repository.UserRepository;
 import com.example.idmservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class UserServiceImplementation implements UserService {
 
         String encryptedPassword = encoder.encode(newUser.getPassword());
         newUser.setPassword(encryptedPassword);
-
+        newUser.setUserStatus(UserStatus.ACTIVE);
         return userRepository.save(newUser);
     }
 

@@ -32,9 +32,10 @@ public class IDMJwtManager {
     //@Value("${idm.access-token-expire}")
     private final Duration accessTokenExpire = Duration.ofMinutes(30);
     //@Value("${idm.refresh-token-expire}")
-    private final Duration maxRefreshTokenLifeTime = Duration.ofHours(12);
+    private final Duration refreshTokenExpire = Duration.ofHours(12);
+
     //@Value("${idm.max-refresh-token-life-time}")
-    private final Duration refreshTokenExpire = Duration.ofDays(30);
+    private final Duration maxRefreshTokenLifeTime = Duration.ofDays(30);
 
 
     @Autowired
@@ -43,8 +44,8 @@ public class IDMJwtManager {
                 new JWTManager.Builder()
                         .keyFileName(keyFileName)
                         .accessTokenExpire(accessTokenExpire)
-                        .maxRefreshTokenLifeTime(refreshTokenExpire)
-                        .refreshTokenExpire(maxRefreshTokenLifeTime)
+                        .maxRefreshTokenLifeTime(maxRefreshTokenLifeTime)
+                        .refreshTokenExpire(refreshTokenExpire)
                         .build();
     }
 
