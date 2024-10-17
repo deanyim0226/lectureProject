@@ -162,6 +162,7 @@ public class IDMController {
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenicate(@RequestBody AuthenticateRequest request)
     {
+        System.out.println("autheticate is called");
         String accessToken = request.getAccessToken();
 
         if(accessToken.equals("") || accessToken.length() == 0){
