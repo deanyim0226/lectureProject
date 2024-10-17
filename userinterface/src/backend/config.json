@@ -1,10 +1,10 @@
 {
-    "baseUrl": "http://localhost:8082",
+    "baseUrl": "http://localhost:8085",
 
     "idm": {
-      "login": "/login",
-      "register": "/register",
-      "autheticate": "/authenticate"
+      "login": "/idm/login",
+      "register": "/idm/register",
+      "autheticate": "/idm/authenticate"
     }
   }
   
