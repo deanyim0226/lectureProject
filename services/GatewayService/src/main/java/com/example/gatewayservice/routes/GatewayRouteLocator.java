@@ -24,7 +24,6 @@ public class GatewayRouteLocator {
 
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder){
-
         return builder.routes()
                         .route("idm",
                                 r -> r.path("/idm/**")

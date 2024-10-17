@@ -17,7 +17,6 @@ import java.util.Optional;
 public class AuthFilter implements GatewayFilter {
 
     private final GatewayServiceConfig config;
-
     private final WebClient webClient;
 
     @Autowired

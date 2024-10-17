@@ -16,10 +16,8 @@ public class CorsGlobalConfig {
         corsConfig.addAllowedMethod("*");  // Allow all HTTP methods (GET, POST, etc.)
         corsConfig.addAllowedHeader("*");  // Allow all headers
         corsConfig.setAllowCredentials(true);  // Allow cookies and credentials
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);  // Apply CORS to all endpoints
-
         return new CorsWebFilter(source);
     }
 }

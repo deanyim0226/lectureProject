@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 
 @ConfigurationProperties(prefix = "gateway")
 public class GatewayServiceConfig {
-
     private final URI idm;
     private final URI  idmAuthenticate;
     private final Long maxLogs;
