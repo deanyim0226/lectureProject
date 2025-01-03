@@ -25,18 +25,6 @@ const Login = (prop) =>{
         idm.login(user)
             .then((auth) =>  {
                 console.log(auth.data)
-                
-                idm.authenticate(auth.data)
-                .then((response) => {
-        
-                    alert("authenication is done" + response)
-
-                    dispatchToStore(setTokens(auth.data))
-                    navigate("/home")
-                })
-                .catch((error)=>{
-                    alert("error" + error)
-                })
 
             })
             .catch((error) => alert(error))

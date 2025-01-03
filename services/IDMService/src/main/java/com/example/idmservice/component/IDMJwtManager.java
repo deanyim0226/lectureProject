@@ -65,7 +65,7 @@ public class IDMJwtManager {
                 .expirationTime(Date.from(Instant.now().plus(this.jwtManager.getAccessTokenExpire())))
                 .issueTime(Date.from(Instant.now()))
                 .claim(JWTManager.CLAIM_ID, user.getId())
-                .claim(JWTManager.CLAIM_ROLES, user.getRoles())
+                .claim(JWTManager.CLAIM_ROLES, user.getRole())
                 .build();
 
         JWSHeader header = new  JWSHeader.Builder(JWTManager.JWS_ALGORITHM)

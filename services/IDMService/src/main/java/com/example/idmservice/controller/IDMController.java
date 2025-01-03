@@ -19,9 +19,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
+@CrossOrigin("http://localhost:4200/")
 public class IDMController {
 
 
@@ -33,6 +35,22 @@ public class IDMController {
 
     @Autowired
     IDMJwtManager jwtManager;
+
+    @GetMapping("/getAllRegularUser")
+    public ResponseEntity<?> getAllRegularUser(){
+
+        List<User> regularUserList = userService.findAllRegularUser();
+
+        return ResponseEntity.status(HttpStatus.OK).body(regularUserList);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllUsers(){
+
+        List<User> userList = userService.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK).body(userList);
+    }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@RequestBody User user){
@@ -54,7 +72,7 @@ public class IDMController {
         User user = userService.findByEmail(request.getEmail());
 
         if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(request);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(request);
         }
 
         if(!userService.checkUser(user, request.getPassword())){
